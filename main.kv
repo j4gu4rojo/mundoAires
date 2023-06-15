@@ -1,0 +1,667 @@
+#:import RiseInTransition kivy.uix.screenmanager.RiseInTransition
+#:import SlideTransition kivy.uix.screenmanager.SlideTransition
+#:import MDCard kivymd.uix.card.MDCard
+#:import MDBoxLayout kivymd.uix.boxlayout.MDBoxLayout
+#:import Image kivy.uix.image.Image
+#:import MDLabel kivymd.uix.label.MDLabel
+#:import MDGridLayout kivymd.uix.gridlayout.MDGridLayout
+#:import MDFillRoundFlatButton kivymd.uix.button.MDFillRoundFlatButton
+#:import MDDatePicker kivymd.uix.pickers.MDDatePicker
+
+
+
+<Login>:
+    name: 'login'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: '70dp'
+        
+        Image:
+            source: 'logo.png'
+            size_hint: None, None
+            size: '200dp', '200dp'
+            pos_hint: {'center_x': 0.5}
+
+        MDTextField:
+            id: username_input
+            hint_text: "Username"
+            size_hint_x: None
+            width: '200dp'
+            pos_hint: {'center_x': 0.5}
+            text: ''
+
+        MDTextField:
+            id: password_input
+            hint_text: "Password"
+            size_hint_x: None
+            width: '200dp'
+            pos_hint: {'center_x': 0.5}
+            password: True
+            text: ''
+
+        MDFillRoundFlatButton:
+            text: "Log In"
+            size_hint_x: None
+            width: '200dp'
+            pos_hint: {'center_x': 0.5}
+            on_release: root.login()
+
+        MDLabel:
+            text: '[ref=olvidaste]¿Olvidaste tu contraseña?[/ref]'
+            markup: True
+            halign: 'center'
+            on_touch_down: 
+                if self.collide_point(*args[1].pos): root.show_recovery_dialog()
+      
+
+
+<MainWid>:
+    canvas:
+        Color:
+            rgb: 1,1,1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<StartWid>:
+    name:'startW'
+    orientation: 'vertical'
+    canvas:
+        Color:
+            rgb: 255,255,255
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Image:
+        source: 'logo.png'
+        size_hint: None, None
+        size: '200dp', '200dp'
+        pos_hint: {'center_x': 0.5}
+
+    GridLayout:
+        cols: 2
+        padding: '10dp'
+        spacing: '10dp'
+        pos_hint: {'center_x': 0.5}
+
+        MDCard:
+            orientation: 'vertical'
+            size_hint: None, None
+            size: '150dp', '150dp'
+            on_press: root.create_new_moto() 
+            BoxLayout:
+                orientation: 'vertical'
+                Image:
+                    source: 'image/regisMot.png'  # Reemplaza 'ruta_de_la_imagen.png' con la ruta de tu imagen
+                
+
+
+        MDCard:
+            orientation: 'vertical'
+            size_hint: None, None
+            size: '150dp', '150dp'
+            on_release: root.create_new_product() 
+            BoxLayout:
+                orientation: 'vertical'
+                Image:
+                    source: 'image/regisRepuest.png'  # Reemplaza 'ruta_de_la_imagen.png' con la ruta de tu imagen
+                
+
+        MDCard:
+            orientation: 'vertical'
+            size_hint: None, None
+            size: '150dp', '150dp'
+            on_release: root.back_to_dbwM()
+            BoxLayout:
+                orientation: 'vertical'
+                Image:
+                    source: 'image/infMoto.png'  # Reemplaza 'ruta_de_la_imagen.png' con la ruta de tu imagen
+
+
+        MDCard:
+            orientation: 'vertical'
+            size_hint: None, None
+            size: '150dp', '150dp'
+            on_release: root.back_to_dbw()
+            BoxLayout:
+                orientation: 'vertical'
+                Image:
+                    source: 'image/infoRepu.png'  # Reemplaza 'ruta_de_la_imagen.png' con la ruta de tu imagen
+
+
+    BoxLayout:
+        size_hint_y: .2
+
+
+<DataWid>:
+    data: ''
+    data_id: ''
+    canvas:
+        Color:
+            rgb: 0, 0, 255, 128
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, None
+        height: dp(95)
+        MDIconButton:
+            icon: 'arrow-left'
+            pos_hint: {'center_y': 0.5}
+            on_release: root.mainwid.goto_start()
+        Label:
+            size_hint_x: 0.9
+            size_font: self.width * 0.4
+            text: root.data
+        MDIconButton:
+            icon:'eye'  
+            pos_hint: {'center_y': 0.5}                  
+            on_release: root.update_data(root.data_id)
+            
+
+
+
+
+
+
+<DataBaseWid>:
+    canvas:
+        Color:
+            rgb: 255,255,255
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    ScrollView:
+        size: self.size
+        GridLayout:
+            id: container
+            padding: [10,10,10,10]
+            spacing: 5
+            size_hint_y: None
+            cols: 1
+            row_default_height: root.height*0.2
+            height: self.minimum_height
+
+<LeftLabel@Label>:
+    text_size: self.size
+    halign: 'left'
+
+<MessagePopup>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            id: message
+            size_hint: 1,0.8
+            text: ''
+        Button:
+            size_hint: 1,0.2
+            text: 'Regresar'
+            on_press: root.dismiss()
+
+<InsertDataWid>:
+    orientation: 'vertical'
+    padding: '25dp'
+    canvas:
+        Color:
+            rgb: 255,255,255
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+
+        MDIconButton:
+            icon: 'arrow-left'
+            pos_hint: {'center_y': 0.5}
+            on_release: root.mainwid.goto_start()
+    Image:
+        source: 'image/text.png'
+        size_hint: None, None
+        size: '120dp', '120dp'
+        pos_hint: {'center_x': 0.5}
+
+    LeftLabel: # ---------- ID
+        text: ' ID:'
+    MDTextField:
+        id: ti_id
+        hint_text: 'ID'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False       
+ 
+    LeftLabel: # ---------- Nombre
+        text: ' Nombre:'
+    MDTextField:
+        id: ti_nombre
+        hint_text: 'Nombre'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False        
+
+    LeftLabel: # ---------- Marca
+        text: ' Marca:'
+    MDTextField:
+        id: ti_marca
+        hint_text: 'Marca'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False
+
+    LeftLabel: # ---------- Costo
+        text: ' Costo por unidad en pesos:'
+    MDTextField:
+        id: ti_costo
+        hint_text: 'Costo'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False
+
+    LeftLabel:  # ---------- Almacen
+        text: ' Cantidad del producto en almacen:'
+    MDTextField:
+        id: ti_almacen
+        hint_text: 'Cantidad'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False
+
+    BoxLayout:
+        size_hint_y: 1
+
+    BoxLayout:
+        size_hint_y: None
+        height: '30dp'
+        spacing: '10dp'
+        pos_hint: {'center_x': 0.7, 'top': 0.8}
+
+        MDFillRoundFlatButton:
+            text: "Crear"
+            size_hint_x: None
+            width: '200dp'
+            pos_hint: {'center_x': 0.5}
+            on_release: root.insert_data()
+
+        MDFillRoundFlatButton:
+            text: "Ver Registros"
+            size_hint_x: None
+            width: '200dp'
+            pos_hint: {'center_x': 0.5}
+            on_release: root.back_to_dbw()  
+
+
+ 
+
+<UpdateDataWid>:
+    orientation: 'vertical'
+    padding: '25dp'
+    data_id: ''
+    canvas:
+        Color:
+            rgb: 255,255,255
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+
+        MDIconButton:
+            icon: 'arrow-left'
+            pos_hint: {'center_y': 0.5}
+            on_release: root.mainwid.goto_start()
+    Image:
+        source: 'image/text.png'
+        size_hint: None, None
+        size: '120dp', '120dp'
+        pos_hint: {'center_x': 0.5}
+        
+    LeftLabel: # ---------- ID
+        text: ' ID: '+root.data_id
+    LeftLabel: # ---------- Nombre
+        text: ' Nombre:'
+    MDTextField:
+        id: ti_nombre
+        hint_text: 'Nombre'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False 
+    LeftLabel: # ---------- Marca
+        text: ' Marca:'
+    MDTextField:
+        id: ti_marca
+        hint_text: 'Marca'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False
+
+    LeftLabel: # ---------- Costo
+        text: ' Costo por unidad en pesos:'
+    MDTextField:
+        id: ti_costo
+        hint_text: 'Costo'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False
+
+    LeftLabel:  # ---------- Alamcen
+        text: ' Cantidad del producto en almacen:'
+    MDTextField:
+        id: ti_almacen
+        hint_text: 'Cantidad'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False
+
+    BoxLayout:
+        size_hint_y: 1
+
+    BoxLayout:
+        size_hint_y: None
+        height: '30dp'
+        spacing: '20dp'
+        pos_hint: {'center_x': 0.7, 'top': 0.8}
+
+        MDFillRoundFlatButton:
+            text: "Actualizar"
+            size_hint_x: None
+            width: '200dp'
+            pos_hint: {'center_x': 0.5}
+            on_release: root.update_data()
+
+        MDFillRoundFlatButton:
+            text: "Eliminar"
+            size_hint_x: None
+            width: '200dp'
+            pos_hint: {'center_x': 0.5}
+            on_release: root.delete_data() 
+
+
+
+
+
+<DataWidM>:
+    data: ''
+    data_id: ''
+    canvas:
+        Color:
+            rgb: 0, 0, 255, 128
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, None
+        height: dp(95)
+        MDIconButton:
+            icon: 'arrow-left'
+            pos_hint: {'center_y': 0.5}
+            on_release: root.mainwid.goto_start()
+        Label:
+            size_hint_x: 0.9
+            size_font: self.width * 0.4
+            text: root.data
+
+            
+        MDIconButton:
+            icon:'eye'  
+            pos_hint: {'center_y': 0.5}                      
+            on_release: root.update_dataM(root.data_id)
+
+
+
+
+<DataBaseWidM>:
+    canvas:
+        Color:
+            rgb: 255,255,255
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    ScrollView:
+        size: self.size
+        GridLayout:
+            id: containerM
+            padding: [10,10,10,10]
+            spacing: 5
+            size_hint_y: None
+            cols: 1
+            row_default_height: root.height*0.2
+            height: self.minimum_height
+
+<LeftLabel@Label>:
+    text_size: self.size
+    halign: 'left'
+
+
+
+<MessagePopupM>:
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            id: message
+            size_hint: 1,0.8
+            text: ''
+        Button:
+            size_hint: 1,0.2
+            text: 'Regresar'
+            on_press: root.dismiss()
+
+<InsertDataWidM>:
+    orientation: 'vertical'
+    padding: '17dp'
+    canvas:
+        Color:
+            rgb: 255,255,255
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+
+        MDIconButton:
+            icon: 'arrow-left'
+            pos_hint: {'center_y': 0.5}
+            on_release: root.mainwid.goto_start()
+    Image:
+        source: 'image/text.png'
+        size_hint: None, None
+        size: '120dp', '120dp'
+        pos_hint: {'center_x': 0.5}
+
+    LeftLabel: # ---------- ID
+        text: ' ID:'
+    MDTextField:
+        id: ti_idM
+        hint_text: 'ID'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False       
+ 
+    LeftLabel: # ---------- Nombre
+        text: 'Placa:'
+    MDTextField:
+        id: ti_placaM
+        hint_text: 'Placa'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False        
+
+    LeftLabel: # ---------- Marca
+        text: ' Marca:'
+    MDTextField:
+        id: ti_marcaM
+        hint_text: 'Marca'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False
+
+    LeftLabel: # ---------- Costo
+        text: ' Conductor:'
+    MDTextField:
+        id: ti_conductorM
+        hint_text: 'Conductor'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False
+
+    LeftLabel:  # ---------- Almacen
+        text: 'Fecha Del Aceite:'
+    MDLabel:
+        text: root.fecha_seleccionada if root.fecha_seleccionada else 'Fecha no seleccionada'
+        halign: 'center'
+        pos_hint: {'center_x': .5}
+        padding:'10dp'    
+
+    MDFillRoundFlatButton:
+        text: "Seleccionar Fecha"
+        size_hint_x: None
+        height:"30dp"
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        on_release: root.open_date_picker()
+
+    BoxLayout:
+        size_hint_y: 1
+
+    BoxLayout:
+        size_hint_y: None
+        height: '30dp'
+        spacing: '10dp'
+        pos_hint: {'center_x': 0.7, 'top': 0.8}
+
+        MDFillRoundFlatButton:
+            text: "Crear"
+            size_hint_x: None
+            width: '200dp'
+            pos_hint: {'center_x': 0.5}
+            on_release: root.insert_dataM()
+
+        MDFillRoundFlatButton:
+            text: "Ver Registros"
+            size_hint_x: None
+            width: '200dp'
+            pos_hint: {'center_x': 0.5}
+            on_release: root.back_to_dbwM()  
+
+<UpdateDataWidM>:
+    orientation: 'vertical'
+    padding: '25dp'
+    data_id: ''
+    canvas:
+        Color:
+            rgb: 255,255,255
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+
+        MDIconButton:
+            icon: 'arrow-left'
+            pos_hint: {'center_y': 0.5}
+            on_release: root.mainwid.goto_start()
+    Image:
+        source: 'image/text.png'
+        size_hint: None, None
+        size: '120dp', '120dp'
+        pos_hint: {'center_x': 0.5}
+        
+    LeftLabel: # ---------- ID
+        text: ' ID: '+root.data_id
+    LeftLabel: # ---------- Nombre
+        text: ' Placa:'
+    MDTextField:
+        id: ti_placaM
+        hint_text: 'Placa'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False 
+    LeftLabel: # ---------- Marca
+        text: ' Marca:'
+    MDTextField:
+        id: ti_marcaM
+        hint_text: 'Marca'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False
+
+    LeftLabel: # ---------- Costo
+        text: ' Conductor:'
+    MDTextField:
+        id: ti_conductorM
+        hint_text: 'Conductor'
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        text: '' 
+        multiline: False
+
+    LeftLabel:  # ---------- Alamcen
+        text: 'Fecha del Aceite:'
+    MDLabel:
+        text: root.fecha_seleccionada if root.fecha_seleccionada else 'Fecha no seleccionada'
+        halign: 'center'
+        pos_hint: {'center_x': .5}    
+
+    MDFillRoundFlatButton:
+        text: "Seleccionar Fecha"
+        size_hint_x: None
+        width: '200dp'
+        pos_hint: {'center_x': 0.5}
+        on_release: root.open_date_picker()
+
+
+    BoxLayout:
+        size_hint_y: 1
+
+    BoxLayout:
+        size_hint_y: None
+        height: '30dp'
+        spacing: '20dp'
+        pos_hint: {'center_x': 0.7, 'top': 0.8}
+
+        MDFillRoundFlatButton:
+            text: "Actualizar"
+            size_hint_x: None
+            width: '200dp'
+            pos_hint: {'center_x': 0.5}
+            on_release: root.update_dataM()
+
+        MDFillRoundFlatButton:
+            text: "Eliminar"
+            size_hint_x: None
+            width: '200dp'
+            pos_hint: {'center_x': 0.5}
+            on_release: root.delete_dataM() 
+
+
+ 
